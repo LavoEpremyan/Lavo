@@ -215,13 +215,21 @@ function renderComments() {
 renderComments();
 
 // Google Translate
+// function googleTranslateElementInit() {
+//   new google.translate.TranslateElement(
+//     {
+//       pageLanguage: 'hy',
+//       includedLanguages: 'en,ru,fr,de,hy',
+//       layout: google.translate.TranslateElement.InlineLayout.SIMPLE
+//     },
+//     'google_translate_element'
+//   );
+// }
 function googleTranslateElementInit() {
-  new google.translate.TranslateElement(
-    {
-      pageLanguage: 'hy',
-      includedLanguages: 'en,ru,fr,de,hy',
-      layout: google.translate.TranslateElement.InlineLayout.SIMPLE
-    },
-    'google_translate_element'
-  );
+  new google.translate.TranslateElement({
+    pageLanguage: 'hy',
+    includedLanguages: 'en,ru,fr,de,hy',
+    layout: google.translate.TranslateElement.InlineLayout.SIMPLE
+  }, 'google_translate_element');
 }
+
