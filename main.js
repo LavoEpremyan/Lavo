@@ -38,10 +38,20 @@ function displayAttractions(data) {
   data.forEach(({ name, image, description }) => {
     const card = document.createElement("div");
     card.className = "attraction-card";
-    card.innerHTML = 
-      <img src="${image}" alt="${name}" />
+    card.innerHTML = `
+      <img src="${image}" alt="${name}">
       <h3>${name}</h3>
-      <p>${description}</p>;
+      <p>${description}</p>
+      <div class="rating">
+        <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
+      </div>
+    `;
+    const stars = card.querySelectorAll(".rating span");
+    stars.forEach((star, i) => {
+      star.addEventListener("click", () => {
+        stars.forEach((s, index) => s.classList.toggle("selected", index <= i));
+      });
+    });
     container.appendChild(card);
   });
 }
@@ -50,18 +60,15 @@ function applyFilters() {
   const term = searchInput.value.toLowerCase();
   const category = filterSelect.value;
   const filtered = attractions.filter(
-    (a) =>
-      a.name.toLowerCase().includes(term) &&
-      (category === "Բոլորը" || a.category === category)
+    (a) => a.name.toLowerCase().includes(term) && (category === "Բոլորը" || a.category === category)
   );
   displayAttractions(filtered);
 }
-
 searchInput.addEventListener("input", applyFilters);
 filterSelect.addEventListener("change", applyFilters);
 displayAttractions(attractions);
 
-// Map
+// Leaflet Map
 const map = L.map("map").setView([39.205, 46.405], 12);
 L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
   attribution: "&copy; OpenStreetMap contributors"
@@ -71,17 +78,16 @@ attractions.forEach(({ name, description, coords }) => {
   if (coords) {
     L.marker(coords)
       .addTo(map)
-      .bindPopup(<strong>${name}</strong><br>${description});
+      .bindPopup(`<strong>${name}</strong><br>${description}`);
   }
 });
 
-// Dark Mode
-const toggleDark = document.getElementById("toggleDark");
-toggleDark.addEventListener("click", () => {
+// Dark mode toggle
+document.getElementById("toggleDark").addEventListener("click", () => {
   document.body.classList.toggle("dark");
 });
 
-// Comments
+// Comments & Replies
 const form = document.getElementById("commentForm");
 const list = document.getElementById("commentList");
 
@@ -89,22 +95,35 @@ form.addEventListener("submit", (e) => {
   e.preventDefault();
   const name = document.getElementById("username").value;
   const comment = document.getElementById("usercomment").value;
-  if (name && comment) {
-    const entry = { name, comment, date: new Date().toLocaleString() };
-    const comments = JSON.parse(localStorage.getItem("comments") || "[]");
-    comments.push(entry);
-    localStorage.setItem("comments", JSON.stringify(comments));
-    form.reset();
-    renderComments();
-  }
+  const entry = { name, comment, date: new Date().toLocaleString(), replies: [] };
+  const comments = JSON.parse(localStorage.getItem("comments") || "[]");
+  comments.push(entry);
+  localStorage.setItem("comments", JSON.stringify(comments));
+  form.reset();
+  renderComments();
 });
 
 function renderComments() {
   const comments = JSON.parse(localStorage.getItem("comments") || "[]");
-  list.innerHTML = comments.map(c =>
-    <div><strong>${c.name}</strong> <em>${c.date}</em><br>${c.comment}</div>
-  ).join("");
+  list.innerHTML = comments.map((c, i) => `
+    <div>
+      <strong>${c.name}</strong> <em>${c.date}</em><br>${c.comment}
+      <div class="reply-btn" onclick="replyTo(${i})">Պատասխանել</div>
+      ${c.replies.map(r => `<div style="margin-left:1rem;"><em>${r}</em></div>`).join("")}
+    </div>
+  `).join("");
 }
+
+window.replyTo = function(index) {
+  const reply = prompt("Գրեք ձեր պատասխանը");
+  if (reply) {
+    const comments = JSON.parse(localStorage.getItem("comments") || "[]");
+    comments[index].replies.push(reply);
+    localStorage.setItem("comments", JSON.stringify(comments));
+    renderComments();
+  }
+};
+
 renderComments();
 
 // Google Translate
