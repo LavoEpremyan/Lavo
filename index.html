@@ -156,7 +156,15 @@
   </main>
 
   <footer>
-    <p> 2025 Կապան ՀԱՊՀ </p>
+    <p> 2025 Կապան ՀԱՊՀ <section id="comments">
+      <h2>Մեկնաբանություններ</h2>
+      <form id="commentForm">
+        <input type="text" id="username" placeholder="Ձեր անունը" required />
+        <textarea id="usercomment" placeholder="Ձեր մեկնաբանությունը" required></textarea>
+        <button type="submit">Ուղարկել</button>
+      </form>
+      <div id="commentList"></div>
+    </section> </p>
   </footer>
 
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
