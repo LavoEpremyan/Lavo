@@ -1,4 +1,4 @@
-<!-- <!-- <!DOCTYPE html>
+<!-- <!-- <!-- <!DOCTYPE html>
 <html lang="hy">
 <head>
   <meta charset="UTF-8">
@@ -276,6 +276,82 @@
       <h2>Կապ մեզ հետ</h2>
       <p>Հետադարձ կապ՝ epremyanlavo1@</p>
       <p> +374 94 12 79 34</p>
+    </section>
+  </main>
+
+  <footer>
+    <p>2025 Կապան ՀԱՊՀ</p>
+  </footer>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
+  <script src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+  <script src="main.js"></script>
+</body>
+</html>
+ -->
+ <!DOCTYPE html>
+<html lang="hy">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Կապանի Տեսարժան Վայրեր</title>
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="shortcut icon" href="images/favicon.png" type="image/png" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="" />
+</head>
+<body>
+  <header>
+    <div class="logo">Կապան Տուրիզմ</div>
+    <nav>
+      <ul>
+        <li><a href="#home">Գլխավոր</a></li>
+        <li><a href="#attractions">Տեսարժան վայրեր</a></li>
+        <li><a href="#about">Մեր մասին</a></li>
+        <li><a href="#contact">Կապ</a></li>
+      </ul>
+    </nav>
+    <button id="toggleDark">🌙</button>
+    <div id="google_translate_element"></div>
+  </header>
+
+  <main>
+    <section id="home">
+      <h1>Բարի գալուստ Կապան</h1>
+      <p>Բացահայտեք Կապանի պատմական, բնապահպանական և արշավային գոհարները։</p>
+    </section>
+
+    <section id="attractions">
+      <h2>Տեսարժան վայրեր</h2>
+      <input type="text" id="searchInput" placeholder="Փնտրել ըստ անվան..." />
+      <select id="categoryFilter">
+        <option value="Բոլորը">Բոլոր կատեգորիաները</option>
+        <option value="Պատմական">Պատմական</option>
+        <option value="Բնապահպանական">Բնապահպանական</option>
+        <option value="Արշավային">Արշավային</option>
+      </select>
+      <div class="attractions-container" id="attractions-container"></div>
+      <div id="map"></div>
+    </section>
+
+    <section id="about">
+      <h2>Մեր մասին</h2>
+      <p>Նպատակ ունենք զարգացնել Կապանի տուրիզմը՝ լուսաբանելով պատմական, մշակութային ու բնական գանձերը։</p>
+    </section>
+
+    <section id="contact">
+      <h2>Կապ մեզ հետ</h2>
+      <p>Հետադարձ կապ՝ epremyanlavo1@</p>
+      <p>+374 94 12 79 34</p>
+    </section>
+
+    <section id="comments">
+      <h2>Մեկնաբանություններ</h2>
+      <form id="commentForm">
+        <input type="text" id="username" placeholder="Ձեր անունը" required />
+        <textarea id="usercomment" placeholder="Ձեր մեկնաբանությունը" required></textarea>
+        <button type="submit">Ուղարկել</button>
+      </form>
+      <div id="commentList"></div>
     </section>
   </main>
 
