@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="hy">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Կապանի Տեսարժան Վայրեր</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f4f4f4;
+      color: #333;
+    }
+    header {
+      background: #004d40;
+      color: #fff;
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    header .logo { font-size: 1.5rem; font-weight: bold; }
+    nav ul {
+      list-style: none;
+      display: flex;
+      gap: 1rem;
+      padding: 0;
+    }
+    nav ul li a {
+      color: white;
+      text-decoration: none;
+    }
+    #google_translate_element {
+      margin-left: 1rem;
+    }
+    main { padding: 2rem; }
+    .attractions-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1.5rem;
+      justify-content: center;
+    }
+    .attraction-card {
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      width: 300px;
+      overflow: hidden;
+      transition: 0.3s;
+    }
+    .attraction-card:hover { transform: scale(1.02); }
+    .attraction-card img {
+      width: 100%; height: 200px; object-fit: cover;
+    }
+    .attraction-card h3 {
+      margin: 0.5rem; color: #004d40;
+    }
+    .attraction-card p {
+      padding: 0 0.5rem 1rem;
+    }
+    #searchInput, #categoryFilter {
+      display: block;
+      margin: 1rem auto;
+      padding: 0.5rem;
+      font-size: 1rem;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      max-width: 400px;
+      width: 100%;
+    }
+    #map {
+      height: 400px;
+      width: 100%;
+      border-radius: 10px;
+      margin-top: 2rem;
+    }
+    footer {
+      background: #004d40;
+      color: white;
+      text-align: center;
+      padding: 1rem;
+    }
+  </style>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="" />
+</head>
+<body>
+  <header>
+    <div class="logo">Կապան Տուրիզմ</div>
+    <nav>
+      <ul>
+        <li><a href="#home">Գլխավոր</a></li>
+        <li><a href="#attractions">Տեսարժան վայրեր</a></li>
+        <li><a href="#about">Մեր մասին</a></li>
+        <li><a href="#contact">Կապ</a></li>
+      </ul>
+    </nav>
+    <div id="google_translate_element"></div>
+  </header>
+
+  <main>
+    <section id="home">
+      <h1>Բարի գալուստ Կապան</h1>
+      <p>Բացահայտեք Կապանի պատմական, բնապահպանական և արշավային գոհարները։</p>
+    </section>
+
+    <section id="attractions">
+      <h2>Տեսարժան վայրեր</h2>
+      <input type="text" id="searchInput" placeholder="Փնտրել ըստ անվան...">
+      <select id="categoryFilter">
+        <option value="Բոլորը">Բոլոր կատեգորիաները</option>
+        <option value="Պատմական">Պատմական</option>
+        <option value="Բնապահպանական">Բնապահպանական</option>
+        <option value="Արշավային">Արշավային</option>
+      </select>
+      <div class="attractions-container" id="attractions-container"></div>
+      <div id="map"></div>
+    </section>
+
+    <section id="about">
+      <h2>Մեր մասին</h2>
+      <p>Նպատակ ունենք զարգացնել Կապանի տուրիզմը՝ լուսաբանելով պատմական, մշակութային ու բնական գանձերը։</p>
+    </section>
+
+    <section id="contact">
+      <h2>Կապ մեզ հետ</h2>
+      <p>Հետադարձ կապ՝ epremyanlavo1@</p>
+      <p> +374 94 12 79 34</p>
+
+    </section>
+
+    <section id="comments">
+      <h2>Մեկնաբանություններ</h2>
+      <form id="commentForm">
+        <input type="text" id="username" placeholder="Ձեր անունը" required />
+        <textarea id="usercomment" placeholder="Ձեր մեկնաբանությունը" required></textarea>
+        <button type="submit">Ուղարկել</button>
+      </form>
+      <div id="commentList"></div>
+    </section>
+  </main>
+
+  <footer>
+    <p> 2025 Կապան ՀԱՊՀ </p>
+  </footer>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
+  <script>
+    const attractions = [
+      { name: "Բաղաբերդի ամրոց", image: "images/baghaberd_amroc.jpg", description: "Բաղաբերդը 4-րդ դարի ամրոց է Կապան և Քաջարան քաղաքների միջև։", coords: [39.1953, 46.4119], category: "Պատմական" },
+      { name: "Խուստուփ լեռ", image: "images/khustup-ler.jpg", description: "Խուստուփ լեռն՝ 3201 մ բարձրությամբ։", coords: [39.1067, 46.3956], category: "Բնապահպանական" },
+      { name: "Վահանավանք", image: "images/vahanavanq.jpg", description: "Վահանավանքը՝ 10-11-րդ դարերի վանական համալիր։", coords: [39.1903, 46.4040], category: "Պատմական" },
+      { name: "Զիփլայն Կապանում", image: "images/zipline.png", description: "Զիփլայն թռիչք քաղաքի վրայով՝ էքստրեմալ փորձառություն։", coords: [39.208, 46.405], category: "Արշավային" }
+    ];
+
+    const container = document.getElementById("attractions-container");
+    const searchInput = document.getElementById("searchInput");
+    const filterSelect = document.getElementById("categoryFilter");
+
+    function displayAttractions(data) {
+      container.innerHTML = "";
+      data.forEach(({ name, image, description }) => {
+        const card = document.createElement("div");
+        card.className = "attraction-card";
+        card.innerHTML = `<img src="${image}" alt="${name}"><h3>${name}</h3><p>${description}</p>`;
+        container.appendChild(card);
+      });
+    }
+
+    function applyFilters() {
+      const term = searchInput.value.toLowerCase();
+      const category = filterSelect.value;
+      const filtered = attractions.filter(attraction => attraction.name.toLowerCase().includes(term) && (category === "Բոլորը" || attraction.category === category));
+      displayAttractions(filtered);
+    }
+
+    searchInput.addEventListener("input", applyFilters);
+    filterSelect.addEventListener("change", applyFilters);
+    displayAttractions(attractions);
+
+    const map = L.map('map').setView([39.205, 46.405], 12);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '&copy; OpenStreetMap contributors'
+    }).addTo(map);
+
+    attractions.forEach(({ name, description, coords }) => {
+      if (coords) {
+        L.marker(coords).addTo(map).bindPopup(`<strong>${name}</strong><br>${description}`);
+      }
+    });
+
+    // Comments
+    const form = document.getElementById("commentForm");
+    const list = document.getElementById("commentList");
+
+    form.addEventListener("submit", (e) => {
+      e.preventDefault();
+      const name = document.getElementById("username").value;
+      const comment = document.getElementById("usercomment").value;
+      if (name && comment) {
+        const entry = { name, comment, date: new Date().toLocaleString() };
+        const comments = JSON.parse(localStorage.getItem("comments") || "[]");
+        comments.push(entry);
+        localStorage.setItem("comments", JSON.stringify(comments));
+        form.reset();
+        renderComments();
+      }
+    });
+
+    function renderComments() {
+      const comments = JSON.parse(localStorage.getItem("comments") || "[]");
+      list.innerHTML = comments
+        .map(
+          (c) => `<div><strong>${c.name}</strong> <em>${c.date}</em><br>${c.comment}</div>`
+        )
+        .join("");
+    }
+
+    renderComments();
+  </script>
+  <script>
+    function googleTranslateElementInit() {
+      new google.translate.TranslateElement({pageLanguage: 'hy', includedLanguages: 'en,ru,fr,de,hy', layout: google.translate.TranslateElement.InlineLayout.SIMPLE}, 'google_translate_element');
+    }
+  </script>
+  <script src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+</body>
+</html>
