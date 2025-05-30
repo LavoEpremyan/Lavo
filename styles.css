@@ -11,7 +11,6 @@ header {
   color: white;
   padding: 1rem;
   display: flex;
-  flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
 }
@@ -44,14 +43,6 @@ nav a {
 
 main {
   padding: 2rem;
-}
-
-input[type="text"], select {
-  padding: 0.5rem;
-  margin-top: 1rem;
-  margin-right: 0.5rem;
-  border-radius: 5px;
-  border: 1px solid #ccc;
 }
 
 .attractions-container {
@@ -146,16 +137,4 @@ body.dark #commentForm textarea {
 
 body.dark #commentForm button {
   background-color: #555;
-}
-
-/* Responsive */
-@media (max-width: 600px) {
-  nav ul {
-    flex-direction: column;
-    gap: 0.5rem;
-  }
-
-  main {
-    padding: 1rem;
-  }
 }
