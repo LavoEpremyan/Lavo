@@ -76,7 +76,8 @@ attractions.forEach(({ name, description, coords }) => {
 });
 
 // Dark Mode
-document.getElementById("toggleDark").addEventListener("click", () => {
+const toggleDark = document.getElementById("toggleDark");
+toggleDark.addEventListener("click", () => {
   document.body.classList.toggle("dark");
 });
 
@@ -114,4 +115,3 @@ function googleTranslateElementInit() {
     layout: google.translate.TranslateElement.InlineLayout.SIMPLE
   }, 'google_translate_element');
 }
-
