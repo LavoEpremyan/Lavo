@@ -1,3 +1,48 @@
+ const attractions = [
+  {
+    name: "Բաղաբերդի ամրոց",
+    image: "images/baghaberd_amroc.jpg",
+    description: "Բաղաբերդը 4-րդ դարի ամրոց է Կապան և Քաջարան քաղաքների միջև։",
+    coords: [39.1953, 46.4119],
+    category: "Պատմական",
+    wiki: "https://hy.wikipedia.org/wiki/Բաղաբերդ"
+  },
+  {
+    name: "Խուստուփ լեռ",
+    image: "images/khustup-ler.jpg",
+    description: "Խուստուփ լեռն՝ 3201 մ բարձրությամբ։",
+    coords: [39.1067, 46.3956],
+    category: "Բնապահպանական",
+    wiki: "https://hy.wikipedia.org/wiki/Խուստուփ"
+  },
+  {
+    name: "Վահանավանք",
+    image: "images/vahanavanq.jpg",
+    description: "Վահանավանքը՝ 10-11-րդ դարերի վանական համալիր։",
+    coords: [39.1903, 46.4040],
+    category: "Պատմական",
+    wiki: "https://hy.wikipedia.org/wiki/Վահանավանք"
+  },
+  {
+    name: "Զիփլայն Կապանում",
+    image: "images/zipline.png",
+    description: "Զիփլայն թռիչք քաղաքի վրայով՝ էքստրեմալ փորձառություն։",
+    coords: [39.208, 46.405],
+    category: "Արշավային",
+    wiki: "https://kapantourism.am"
+  }
+];
+
+const container = document.getElementById("attractions-container");
+const searchInput = document.getElementById("searchInput");
+const filterSelect = document.getElementById("categoryFilter");
+
+function displayAttractions(data) {
+  container.innerHTML = "";
+  data.forEach(({ name, image, description, wiki }) => {
+    const card = document.createElement("div");
+    card.className = "attraction-card";
+    card.innerHTML = `
 const attractions = [
   {
     name: "Բաղաբերդի ամրոց",
