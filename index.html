@@ -4,13 +4,23 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Կապանի Տուրիզմ</title>
+
+  <!-- ✅ SEO meta tags -->
+  <meta name="description" content="Բացահայտեք Կապանի պատմական, բնապահպանական և արշավային տեսարժան վայրերը։">
+  <meta name="keywords" content="Կապան, Տուրիզմ, Հայաստան, Տեսարժան վայրեր, Խուստուփ, Բաղաբերդ, Վահանավանք, Զիփլայն, Արշավ, Քարանձավ, Բնություն">
+  <meta name="author" content="Կապանի Տուրիզմ թիմ">
+
+  <!-- Stylesheets -->
   <link rel="stylesheet" href="styles.css" />
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="" />
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+
   <link rel="shortcut icon" href="images/favicon.png" type="image/png" />
+
+  <!-- Scripts -->
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
-  <script src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 </head>
 <body>
   <header>
@@ -60,16 +70,19 @@
 
     <section id="calendarSection">
       <h2>Մոտակա միջոցառումներ</h2>
-      <ul id="eventList"></ul>
+      <ul id="eventList">
+        <li>Ճանապարհորդություն դեպի Վահանավանք – Հունիս 15</li>
+        <li>Արշավ դեպի Խուստուփ լեռ – Հուլիս 2</li>
+      </ul>
     </section>
 
     <section id="pollSection">
       <h2>Ձեր կարծիքը կարևոր է</h2>
       <form id="pollForm">
         <label>Ո՞ր վայրն է ձեր սիրելին</label><br>
-        <input type="radio" name="poll" value="Baghaberd"> Բաղաբերդ<br>
-        <input type="radio" name="poll" value="Khustup"> Խուստուփ<br>
-        <input type="radio" name="poll" value="Vahanavank"> Վահանավանք<br>
+        <input type="radio" name="poll" value="Բաղաբերդ"> Բաղաբերդ<br>
+        <input type="radio" name="poll" value="Խուստուփ"> Խուստուփ<br>
+        <input type="radio" name="poll" value="Վահանավանք"> Վահանավանք<br>
         <button type="submit">Քվեարկել</button>
       </form>
       <canvas id="pollChart"></canvas>
@@ -101,6 +114,7 @@
     <p>&copy; 2025 Կապան ՀԱՊՀ</p>
   </footer>
 
+  <!-- Main Logic -->
   <script src="main.js"></script>
 </body>
 </html>
