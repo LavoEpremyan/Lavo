@@ -1,117 +1,103 @@
-<!DOCTYPE html>
-<html lang="hy">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Կապանի Տուրիզմ</title>
-  <meta name="description" content="Բացահայտեք Կապանի պատմական, բնապահպանական և արշավային գոհարները՝ այցելելով մեր տուրիստական ուղեցույցը։">
-  <meta name="keywords" content="Կապան, տուրիզմ, պատմական վայրեր, բնապահպանական, արշավ, Հայաստան, տեսարժան վայրեր, զբոսաշրջություն">
-  <link rel="stylesheet" href="styles.css" />
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="" />
-  <link rel="shortcut icon" href="images/favicon.png" type="image/png" />
-  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <script src="main.js" defer></script>
-</head>
-<body>
-  <header>
-    <div class="logo">Կապան Տուրիզմ</div>
-    <nav>
-      <ul>
-        <li><a href="#home">Գլխավոր</a></li>
-        <li><a href="#attractions">Տեսարժան վայրեր</a></li>
-        <li><a href="#about">Մեր մասին</a></li>
-        <li><a href="#contact">Կապ</a></li>
-      </ul>
-    </nav>
-    <div class="header-tools">
-      <button id="toggleDark" title="Թեմա">🌙</button>
-      <div id="google_translate_element"></div>
-    </div>
-  </header>
+const attractions = [
+  {
+    name: "Բաղաբերդի ամրոց",
+    image: "images/baghaberd_amroc.jpg",
+    description: "Բաղաբերդը 4-րդ դարի ամրոց է Կապան և Քաջարան քաղաքների միջև։",
+    coords: [39.1953, 46.4119],
+    category: "Պատմական"
+  },
+  {
+    name: "Խուստուփ լեռ",
+    image: "images/khustup-ler.jpg",
+    description: "Խուստուփ լեռն՝ 3201 մ բարձրությամբ։",
+    coords: [39.1067, 46.3956],
+    category: "Բնապահպանական"
+  },
+  {
+    name: "Վահանավանք",
+    image: "images/vahanavanq.jpg",
+    description: "Վահանավանքը՝ 10-11-րդ դարերի վանական համալիր։",
+    coords: [39.1903, 46.4040],
+    category: "Պատմական"
+  },
+  {
+    name: "Զիփլայն Կապանում",
+    image: "images/zipline.png",
+    description: "Զիփլայն թռիչք քաղաքի վրայով՝ էքստրեմալ փորձառություն։",
+    coords: [39.208, 46.405],
+    category: "Արշավային"
+  }
+];
 
-  <main>
-    <section id="home">
-      <h1>Բարի գալուստ Կապան</h1>
-      <p>Բացահայտեք Կապանի պատմական, բնապահպանական և արշավային գոհարները։</p>
-    </section>
+const container = document.getElementById("attractions-container");
+const searchInput = document.getElementById("searchInput");
+const filterSelect = document.getElementById("categoryFilter");
 
-    <section id="attractions">
-      <h2>Տեսարժան վայրեր</h2>
-      <div class="filters">
-        <input type="text" id="searchInput" placeholder="Փնտրել ըստ անվան...">
-        <select id="categoryFilter">
-          <option value="Բոլորը">Բոլոր կատեգորիաները</option>
-          <option value="Պատմական">Պատմական</option>
-          <option value="Բնապահպանական">Բնապահպանական</option>
-          <option value="Արշավային">Արշավային</option>
-        </select>
+function displayAttractions(data) {
+  container.innerHTML = "";
+  data.forEach(({ name, image, description }) => {
+    const card = document.createElement("div");
+    card.className = "attraction-card";
+    card.innerHTML = `
+      <img src="${image}" alt="${name}">
+      <h3>${name}</h3>
+      <p>${description}</p>
+      <div class="rating">
+        <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
       </div>
-      <div class="attractions-container" id="attractions-container"></div>
-      <div id="map"></div>
-      <button id="findNearest">Փնտրել ամենամոտ վայրը</button>
-      <div id="routeResult"></div>
-    </section>
+    `;
+    const stars = card.querySelectorAll(".rating span");
+    stars.forEach((star, i) => {
+      star.addEventListener("click", () => {
+        stars.forEach((s, index) => s.classList.toggle("selected", index <= i));
+      });
+    });
+    container.appendChild(card);
+  });
+}
 
-    <section id="uploadSection">
-      <h2>Վերբեռնեք ձեր պատկերները</h2>
-      <input type="file" id="imageUpload" accept="image/*" multiple />
-      <div id="gallery" class="gallery"></div>
-    </section>
+function applyFilters() {
+  const term = searchInput.value.toLowerCase();
+  const category = filterSelect.value;
+  const filtered = attractions.filter(
+    (a) =>
+      a.name.toLowerCase().includes(term) &&
+      (category === "Բոլորը" || a.category === category)
+  );
+  displayAttractions(filtered);
+}
 
-    <section id="calendarSection">
-      <h2>Մոտակա միջոցառումներ</h2>
-      <ul id="eventList"></ul>
-    </section>
+searchInput.addEventListener("input", applyFilters);
+filterSelect.addEventListener("change", applyFilters);
+displayAttractions(attractions);
 
-    <section id="pollSection">
-      <h2>Ձեր կարծիքը կարևոր է</h2>
-      <form id="pollForm">
-        <label>Ո՞ր վայրն է ձեր սիրելին</label><br>
-        <input type="radio" name="poll" value="Baghaberd"> Բաղաբերդ<br>
-        <input type="radio" name="poll" value="Khustup"> Խուստուփ<br>
-        <input type="radio" name="poll" value="Vahanavank"> Վահանավանք<br>
-        <button type="submit">Քվեարկել</button>
-      </form>
-      <canvas id="pollChart"></canvas>
-    </section>
+// Leaflet Map
+const map = L.map("map").setView([39.205, 46.405], 12);
+L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+  attribution: "&copy; OpenStreetMap contributors"
+}).addTo(map);
 
-    <section id="aiSuggestion">
-      <h2>Խորհուրդ տուր ինձ</h2>
-      <button id="getSuggestion">Խորհուրդ տալ վայր</button>
-      <p id="suggestionResult"></p>
-    </section>
+attractions.forEach(({ name, description, coords }) => {
+  if (coords) {
+    L.marker(coords)
+      .addTo(map)
+      .bindPopup(`<strong>${name}</strong><br>${description}`);
+  }
+});
 
-    <section id="comments">
-      <h2>Մեկնաբանություններ</h2>
-      <form id="commentForm">
-        <input type="text" id="username" placeholder="Ձեր անունը" required />
-        <textarea id="usercomment" placeholder="Ձեր մեկնաբանությունը" required></textarea>
-        <button type="submit">Ուղարկել</button>
-      </form>
-      <div id="commentList"></div>
-    </section>
+// Dark mode toggle
+document.getElementById("toggleDark").addEventListener("click", () => {
+  document.body.classList.toggle("dark");
+});
 
-    <section id="stats">
-      <h2>Վիճակագրություն</h2>
-      <canvas id="statsChart"></canvas>
-    </section>
-  </main>
+// Comments & Replies
+const form = document.getElementById("commentForm");
+const list = document.getElementById("commentList");
 
-  <footer>
-    <p>&copy; 2025 Կապան ՀԱՊՀ</p>
-  </footer>
-
-  <script>
-    function googleTranslateElementInit() {
-      new google.translate.TranslateElement({
-        pageLanguage: 'hy',
-        includedLanguages: 'en,ru,fr,de,hy',
-        layout: google.translate.TranslateElement.InlineLayout.SIMPLE
-      }, 'google_translate_element');
-    }
-  </script>
-  <script src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
-</body>
-</html>
+form.addEventListener("submit", (e) => {
+  e.preventDefault();
+  const name = document.getElementById("username").value;
+  const comment = document.getElementById("usercomment").value;
+  const entry = { name, comment
+::contentReference[oaicite:0]{index=0}
+ 
