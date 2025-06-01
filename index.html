@@ -1,15 +1,20 @@
 <!DOCTYPE html>
 <html lang="hy">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Կապանի Տեսարժան Վայրեր</title>
+
+  <!-- SEO meta tags -->
+  <meta name="description" content="Բացահայտեք Կապանի տեսարժան վայրերը՝ ամրոցներ, լեռներ, վանքեր և Զիփլայն արկածներ։" />
+  <meta name="keywords" content="Կապան, տեսարժան վայրեր, Բաղաբերդ, Խուստուփ, Վահանավանք, Զիփլայն, Հայաստան, տուրիզմ" />
+  <meta name="author" content="ՀԱՊՀ ուսանող" />
+
   <link rel="stylesheet" href="styles.css" />
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="" />
   <link rel="shortcut icon" href="images/favicon.png" type="image/png" />
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
   <script src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
   <header>
@@ -25,55 +30,14 @@
     <button id="toggleDark">🌙</button>
     <div id="google_translate_element"></div>
   </header>
-<!DOCTYPE html>
-<html lang="hy">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Կապանի Տեսարժան Վայրեր</title>
-
-  <!-- ✅ SEO Meta Tags -->
-  <meta name="description" content="Բացահայտեք Կապանի տեսարժան վայրերը՝ Բաղաբերդ, Վահանավանք, Խուստուփ և ավելին։" />
-  <meta name="keywords" content="Կապան, Տեսարժան վայրեր Կապանում, Տուրիզմ, Բաղաբերդ, Խուստուփ, Վահանավանք, Զիփլայն, Հայաստան" />
-  <meta name="author" content="ՀԱՊՀ ուսանող" />
-
-  <link rel="stylesheet" href="styles.css" />
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="" />
-  <link rel="shortcut icon" href="images/favicon.png" type="image/png" />
-  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
-  <script src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-</head>
-<body>
-  <!-- Մնացած բովանդակությունը թողնում ենք անփոփոխ -->
-
-  <script src="main.js"></script>
-</body>
-</html>
 
   <main>
     <section id="home">
       <h1>Բարի գալուստ Կապան</h1>
       <p>Բացահայտեք Կապանի պատմական, բնապահպանական և արշավային գոհարները։</p>
     </section>
-      <img src="${image}" alt="${name}">
-      <h3>${name}</h3>
-      <p>${description}</p>
-      <a href="${wiki}" target="_blank" class="wiki-link">Իմացիր ավելին Վիքիպեդիայից</a>
-      <div class="rating">
-        <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
-      </div>
-    `;
-    const stars = card.querySelectorAll(".rating span");
-    stars.forEach((star, i) => {
-      star.addEventListener("click", () => {
-        stars.forEach((s, index) => s.classList.toggle("selected", index <= i));
-      });
-    });
-    container.appendChild(card);
-  });
-}
-          <section id="attractions">
+
+    <section id="attractions">
       <h2>Տեսարժան վայրեր</h2>
       <input type="text" id="searchInput" placeholder="Փնտրել ըստ անվան...">
       <select id="categoryFilter">
@@ -140,5 +104,3 @@
   <script src="main.js"></script>
 </body>
 </html>
- 
-
