@@ -1,3 +1,4 @@
+// Տեսարժան վայրեր
 const attractions = [
   {
     name: "Բաղաբերդի ամրոց",
@@ -29,6 +30,7 @@ const attractions = [
   }
 ];
 
+// Ֆիլտրեր
 const container = document.getElementById("attractions-container");
 const searchInput = document.getElementById("searchInput");
 const filterSelect = document.getElementById("categoryFilter");
@@ -71,7 +73,7 @@ searchInput.addEventListener("input", applyFilters);
 filterSelect.addEventListener("change", applyFilters);
 displayAttractions(attractions);
 
-// Leaflet Map
+// Քարտեզ
 const map = L.map("map").setView([39.205, 46.405], 12);
 L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
   attribution: "&copy; OpenStreetMap contributors"
@@ -85,12 +87,57 @@ attractions.forEach(({ name, description, coords }) => {
   }
 });
 
-// Dark mode toggle
+// Ամենամոտ վայրը
+document.getElementById("findNearest").addEventListener("click", () => {
+  if (!navigator.geolocation) {
+    alert("Ձեր բրաուզերը չի աջակցում տեղաբաշխմանը։");
+    return;
+  }
+
+  navigator.geolocation.getCurrentPosition((position) => {
+    const userLat = position.coords.latitude;
+    const userLng = position.coords.longitude;
+
+    let nearest = null;
+    let minDistance = Infinity;
+
+    attractions.forEach((a) => {
+      const dist = Math.sqrt(
+        Math.pow(userLat - a.coords[0], 2) + Math.pow(userLng - a.coords[1], 2)
+      );
+      if (dist < minDistance) {
+        minDistance = dist;
+        nearest = a;
+      }
+    });
+
+    if (nearest) {
+      document.getElementById("routeResult").innerText = `Ամենամոտ վայրն է՝ ${nearest.name}`;
+      map.setView(nearest.coords, 14);
+    }
+  });
+});
+
+// Մութ ռեժիմ
 document.getElementById("toggleDark").addEventListener("click", () => {
   document.body.classList.toggle("dark");
 });
 
-// Comments & Replies
+// Նկարների վերբեռնում
+document.getElementById("imageUpload").addEventListener("change", function () {
+  const gallery = document.getElementById("gallery");
+  Array.from(this.files).forEach((file) => {
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const img = document.createElement("img");
+      img.src = e.target.result;
+      gallery.appendChild(img);
+    };
+    reader.readAsDataURL(file);
+  });
+});
+
+// Մեկնաբանություններ
 const form = document.getElementById("commentForm");
 const list = document.getElementById("commentList");
 
@@ -98,6 +145,85 @@ form.addEventListener("submit", (e) => {
   e.preventDefault();
   const name = document.getElementById("username").value;
   const comment = document.getElementById("usercomment").value;
-  const entry = { name, comment
-::contentReference[oaicite:0]{index=0}
- 
+  const entry = { name, comment, date: new Date().toLocaleString(), replies: [] };
+  const comments = JSON.parse(localStorage.getItem("comments") || "[]");
+  comments.push(entry);
+  localStorage.setItem("comments", JSON.stringify(comments));
+  form.reset();
+  renderComments();
+});
+
+function renderComments() {
+  const comments = JSON.parse(localStorage.getItem("comments") || "[]");
+  list.innerHTML = comments.map((c, i) => `
+    <div>
+      <strong>${c.name}</strong> <em>${c.date}</em><br>${c.comment}
+      <div class="reply-btn" onclick="replyTo(${i})">Պատասխանել</div>
+      ${c.replies.map(r => `<div style="margin-left:1rem;"><em>${r}</em></div>`).join("")}
+    </div>
+  `).join("");
+}
+
+window.replyTo = function(index) {
+  const reply = prompt("Գրեք ձեր պատասխանը");
+  if (reply) {
+    const comments = JSON.parse(localStorage.getItem("comments") || "[]");
+    comments[index].replies.push(reply);
+    localStorage.setItem("comments", JSON.stringify(comments));
+    renderComments();
+  }
+};
+
+renderComments();
+
+// Google Translate
+function googleTranslateElementInit() {
+  new google.translate.TranslateElement({
+    pageLanguage: 'hy',
+    includedLanguages: 'en,ru,fr,de,hy',
+    layout: google.translate.TranslateElement.InlineLayout.SIMPLE
+  }, 'google_translate_element');
+}
+
+// Քվեարկություն
+const pollForm = document.getElementById("pollForm");
+const pollChart = document.getElementById("pollChart").getContext("2d");
+let pollData = JSON.parse(localStorage.getItem("poll") || "{}");
+
+pollForm.addEventListener("submit", (e) => {
+  e.preventDefault();
+  const selected = pollForm.poll.value;
+  if (selected) {
+    pollData[selected] = (pollData[selected] || 0) + 1;
+    localStorage.setItem("poll", JSON.stringify(pollData));
+    renderPollChart();
+  }
+});
+
+function renderPollChart() {
+  const data = {
+    labels: Object.keys(pollData),
+    datasets: [{
+      label: "Ձայներ",
+      data: Object.values(pollData),
+      backgroundColor: ["#66bb6a", "#29b6f6", "#ffa726"]
+    }]
+  };
+  new Chart(pollChart, {
+    type: "bar",
+    data: data,
+    options: {
+      responsive: true,
+      scales: {
+        y: { beginAtZero: true }
+      }
+    }
+  });
+}
+renderPollChart();
+
+// AI Խորհուրդ
+document.getElementById("getSuggestion").addEventListener("click", () => {
+  const random = attractions[Math.floor(Math.random() * attractions.length)];
+  document.getElementById("suggestionResult").innerText = `Խորհուրդ ենք տալիս այցելել՝ ${random.name}`;
+});
