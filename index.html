@@ -1,21 +1,20 @@
 <!DOCTYPE html>
 <html lang="hy">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Կապանի Տուրիզմ</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Կապանի Տեսարժան Վայրեր</title>
 
-  <!-- SEO -->
-  <meta name="description" content="Բացահայտեք Կապանի պատմական, բնապահպանական և արշավային գոհարները։">
-  <meta name="keywords" content="Կապան, տուրիզմ, Հայաստան, տեսարժան վայրեր, արշավ, բնություն, պատմություն, վայրեր, հուշարձաններ">
+  <!-- ✅ SEO Թեգեր -->
+  <meta name="description" content="Բացահայտեք Կապանի պատմական, բնապահպանական և արշավային տեսարժան վայրերը։">
+  <meta name="keywords" content="Կապան, տուրիզմ, Հայաստան, տեսարժան վայրեր, արշավ, պատմություն, բնություն, պատմական վայրեր, խուստուփ, վահանավանք, զբոսաշրջություն">
 
-  <!-- Styles -->
+  <!-- StyleSheets & Icons -->
   <link rel="stylesheet" href="styles.css" />
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="" />
   <link rel="shortcut icon" href="images/favicon.png" type="image/png" />
 
-  <!-- Scripts -->
+  <!-- JS Libraries -->
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
   <script src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -31,10 +30,8 @@
         <li><a href="#contact">Կապ</a></li>
       </ul>
     </nav>
-    <div class="header-tools">
-      <button id="toggleDark" title="Թեմա">🌙</button>
-      <div id="google_translate_element"></div>
-    </div>
+    <button id="toggleDark">🌙</button>
+    <div id="google_translate_element"></div>
   </header>
 
   <main>
@@ -45,15 +42,13 @@
 
     <section id="attractions">
       <h2>Տեսարժան վայրեր</h2>
-      <div class="filters">
-        <input type="text" id="searchInput" placeholder="Փնտրել ըստ անվան...">
-        <select id="categoryFilter">
-          <option value="Բոլորը">Բոլոր կատեգորիաները</option>
-          <option value="Պատմական">Պատմական</option>
-          <option value="Բնապահպանական">Բնապահպանական</option>
-          <option value="Արշավային">Արշավային</option>
-        </select>
-      </div>
+      <input type="text" id="searchInput" placeholder="Փնտրել ըստ անվան...">
+      <select id="categoryFilter">
+        <option value="Բոլորը">Բոլոր կատեգորիաները</option>
+        <option value="Պատմական">Պատմական</option>
+        <option value="Բնապահպանական">Բնապահպանական</option>
+        <option value="Արշավային">Արշավային</option>
+      </select>
       <div class="attractions-container" id="attractions-container"></div>
       <div id="map"></div>
       <button id="findNearest">Փնտրել ամենամոտ վայրը</button>
@@ -106,7 +101,7 @@
   </main>
 
   <footer>
-    <p>&copy; 2025 Կապան ՀԱՊՀ</p>
+    <p>2025 Կապան ՀԱՊՀ</p>
   </footer>
 
   <script src="main.js"></script>
