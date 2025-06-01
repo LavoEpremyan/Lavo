@@ -1,220 +1,106 @@
-body {
-  font-family: 'Montserrat', sans-serif;
-  margin: 0;
-  padding: 0;
-  background-color: #f5f5f5;
-  color: #333;
-  transition: background 0.3s, color 0.3s;
-}
+<!DOCTYPE html>
+<html lang="hy">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Կապանի Տուրիզմ</title>
+  <link rel="stylesheet" href="styles.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="" />
+  <link rel="shortcut icon" href="images/favicon.png" type="image/png" />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
+  <script src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+  <header>
+    <div class="logo">Կապան Տուրիզմ</div>
+    <nav>
+      <ul>
+        <li><a href="#home">Գլխավոր</a></li>
+        <li><a href="#attractions">Տեսարժան վայրեր</a></li>
+        <li><a href="#about">Մեր մասին</a></li>
+        <li><a href="#contact">Կապ</a></li>
+      </ul>
+    </nav>
+    <div class="header-tools">
+      <button id="toggleDark" title="Թեմա">🌙</button>
+      <div id="google_translate_element"></div>
+    </div>
+  </header>
 
-header {
-  background: #004d40;
-  color: #fff;
-  padding: 1rem 2rem;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  flex-wrap: wrap;
-}
+  <main>
+    <section id="home">
+      <h1>Բարի գալուստ Կապան</h1>
+      <p>Բացահայտեք Կապանի պատմական, բնապահպանական և արշավային գոհարները։</p>
+    </section>
 
-nav ul {
-  list-style: none;
-  display: flex;
-  gap: 1rem;
-  padding: 0;
-  margin: 0;
-}
+    <section id="attractions">
+      <h2>Տեսարժան վայրեր</h2>
+      <div class="filters">
+        <input type="text" id="searchInput" placeholder="Փնտրել ըստ անվան...">
+        <select id="categoryFilter">
+          <option value="Բոլորը">Բոլոր կատեգորիաները</option>
+          <option value="Պատմական">Պատմական</option>
+          <option value="Բնապահպանական">Բնապահպանական</option>
+          <option value="Արշավային">Արշավային</option>
+        </select>
+      </div>
+      <div class="attractions-container" id="attractions-container"></div>
+      <div id="map"></div>
+      <button id="findNearest">Փնտրել ամենամոտ վայրը</button>
+      <div id="routeResult"></div>
+    </section>
 
-nav ul li a {
-  color: #fff;
-  text-decoration: none;
-  font-weight: bold;
-}
+    <section id="uploadSection">
+      <h2>Վերբեռնեք ձեր պատկերները</h2>
+      <input type="file" id="imageUpload" accept="image/*" multiple />
+      <div id="gallery" class="gallery"></div>
+    </section>
 
-#toggleDark {
-  background: none;
-  border: none;
-  color: white;
-  font-size: 1.4rem;
-  cursor: pointer;
-  margin-left: 1rem;
-}
+    <section id="calendarSection">
+      <h2>Մոտակա միջոցառումներ</h2>
+      <ul id="eventList"></ul>
+    </section>
 
-main {
-  padding: 2rem;
-}
+    <section id="pollSection">
+      <h2>Ձեր կարծիքը կարևոր է</h2>
+      <form id="pollForm">
+        <label>Ո՞ր վայրն է ձեր սիրելին</label><br>
+        <input type="radio" name="poll" value="Baghaberd"> Բաղաբերդ<br>
+        <input type="radio" name="poll" value="Khustup"> Խուստուփ<br>
+        <input type="radio" name="poll" value="Vahanavank"> Վահանավանք<br>
+        <button type="submit">Քվեարկել</button>
+      </form>
+      <canvas id="pollChart"></canvas>
+    </section>
 
-.attractions-container {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 1.5rem;
-  justify-content: center;
-  margin-top: 2rem;
-}
+    <section id="aiSuggestion">
+      <h2>Խորհուրդ տուր ինձ</h2>
+      <button id="getSuggestion">Խորհուրդ տալ վայր</button>
+      <p id="suggestionResult"></p>
+    </section>
 
-.attraction-card {
-  background: white;
-  border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-  width: 300px;
-  overflow: hidden;
-  transition: transform 0.3s ease;
-}
+    <section id="comments">
+      <h2>Մեկնաբանություններ</h2>
+      <form id="commentForm">
+        <input type="text" id="username" placeholder="Ձեր անունը" required />
+        <textarea id="usercomment" placeholder="Ձեր մեկնաբանությունը" required></textarea>
+        <button type="submit">Ուղարկել</button>
+      </form>
+      <div id="commentList"></div>
+    </section>
 
-.attraction-card:hover {
-  transform: scale(1.03);
-}
+    <section id="stats">
+      <h2>Վիճակագրություն</h2>
+      <canvas id="statsChart"></canvas>
+    </section>
+  </main>
 
-.attraction-card img {
-  width: 100%;
-  height: 200px;
-  object-fit: cover;
-}
+  <footer>
+    <p>&copy; 2025 Կապան ՀԱՊՀ</p>
+  </footer>
 
-.attraction-card h3 {
-  margin: 0.5rem;
-  color: #004d40;
-}
-
-.attraction-card p {
-  padding: 0 1rem 1rem;
-  font-size: 0.95rem;
-}
-
-.rating {
-  display: flex;
-  justify-content: center;
-  margin-bottom: 1rem;
-}
-
-.rating span {
-  font-size: 1.5rem;
-  cursor: pointer;
-  transition: color 0.2s ease;
-}
-
-.rating span:hover,
-.rating span.selected {
-  color: gold;
-}
-
-#searchInput,
-#categoryFilter {
-  display: block;
-  margin: 1rem auto;
-  padding: 0.5rem;
-  font-size: 1rem;
-  border: 1px solid #ccc;
-  border-radius: 6px;
-  max-width: 400px;
-  width: 100%;
-}
-
-#map {
-  height: 400px;
-  width: 100%;
-  border-radius: 10px;
-  margin-top: 2rem;
-}
-
-.gallery {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 1rem;
-  justify-content: center;
-  margin-top: 1rem;
-}
-
-.gallery img {
-  width: 200px;
-  border-radius: 10px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-  cursor: pointer;
-  transition: transform 0.3s ease;
-}
-
-.gallery img:hover {
-  transform: scale(1.05);
-}
-
-#comments {
-  margin-top: 3rem;
-  background: #fff;
-  padding: 2rem;
-  border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-}
-
-#comments h2 {
-  color: #004d40;
-}
-
-#commentForm {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-  margin-bottom: 2rem;
-}
-
-#commentForm input,
-#commentForm textarea {
-  padding: 0.75rem;
-  border-radius: 6px;
-  border: 1px solid #ccc;
-  font-size: 1rem;
-}
-
-#commentForm button {
-  background-color: #004d40;
-  color: white;
-  border: none;
-  padding: 0.5rem 1.2rem;
-  border-radius: 6px;
-  cursor: pointer;
-  transition: background 0.3s ease;
-}
-
-#commentForm button:hover {
-  background-color: #00695c;
-}
-
-#commentList div {
-  margin-bottom: 1rem;
-  border-bottom: 1px solid #eee;
-  padding-bottom: 1rem;
-}
-
-.reply-btn {
-  color: #00695c;
-  cursor: pointer;
-  font-size: 0.9rem;
-  margin-top: 0.3rem;
-}
-
-/* DARK MODE */
-body.dark {
-  background-color: #121212;
-  color: #f0f0f0;
-}
-
-body.dark header,
-body.dark footer {
-  background-color: #1e1e1e;
-}
-
-body.dark .attraction-card {
-  background: #2c2c2c;
-  color: #fff;
-}
-
-body.dark input,
-body.dark textarea,
-body.dark select {
-  background-color: #333;
-  color: #fff;
-  border: 1px solid #555;
-}
-
-body.dark .reply-btn {
-  color: #80cbc4;
-}
+  <script src="main.js"></script>
+</body>
+</html>
