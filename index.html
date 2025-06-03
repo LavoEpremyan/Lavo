@@ -4,20 +4,9 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Կապանի Տեսարժան Վայրեր</title>
-
-  <!-- ✅ SEO Թեգեր -->
-  <meta name="description" content="Բացահայտեք Կապանի պատմական, բնապահպանական և արշավային տեսարժան վայրերը։">
-  <meta name="keywords" content="Կապան, տուրիզմ, Հայաստան, տեսարժան վայրեր, արշավ, պատմություն, բնություն, պատմական վայրեր, խուստուփ, վահանավանք, զբոսաշրջություն">
-
-  <!-- StyleSheets & Icons -->
-  <link rel="stylesheet" href="styles.css" />
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="" />
-  <link rel="shortcut icon" href="images/favicon.png" type="image/png" />
-
-  <!-- JS Libraries -->
-  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
-  <script src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="shortcut icon" href="images/favicon.png" type="image/png">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="">
 </head>
 <body>
   <header>
@@ -51,55 +40,9 @@
       </select>
       <div class="attractions-container" id="attractions-container"></div>
       <div id="map"></div>
-      <button id="findNearest">Փնտրել ամենամոտ վայրը</button>
-      <div id="routeResult"></div>
     </section>
 
-    <section id="uploadSection">
-      <h2>Վերբեռնեք ձեր պատկերները</h2>
-      <input type="file" id="imageUpload" accept="image/*" multiple />
-      <div id="gallery" class="gallery"></div>
-    </section>
-
-<!--     <section id="calendarSection">
-      <h2>Մոտակա միջոցառումներ</h2>
-      <ul id="eventList"></ul>
-    </section> -->
-
-<!--     <section id="pollSection">
-      <h2>Ձեր կարծիքը կարևոր է</h2>
-      <form id="pollForm">
-        <label>Ո՞ր վայրն է ձեր սիրելին</label><br>
-        <input type="radio" name="poll" value="Baghaberd"> Բաղաբերդ<br>
-        <input type="radio" name="poll" value="Khustup"> Խուստուփ<br>
-        <input type="radio" name="poll" value="Vahanavank"> Վահանավանք<br>
-        <button type="submit">Քվեարկել</button>
-      </form>
-      <canvas id="pollChart"></canvas>
-    </section> -->
-
-<!--     <section id="aiSuggestion">
-      <h2>Խորհուրդ տուր ինձ</h2>
-      <button id="getSuggestion">Խորհուրդ տալ վայր</button>
-      <p id="suggestionResult"></p>
-    </section> -->
-
-    <section id="comments">
-      <h2>Մեկնաբանություններ</h2>
-      <form id="commentForm">
-        <input type="text" id="username" placeholder="Ձեր անունը" required />
-        <textarea id="usercomment" placeholder="Ձեր մեկնաբանությունը" required></textarea>
-        <button type="submit">Ուղարկել</button>
-      </form>
-      <div id="commentList"></div>
-    </section>
-
-<!--     <section id="stats">
-      <h2>Վիճակագրություն</h2>
-      <canvas id="statsChart"></canvas>
-    </section> -->
-  </main>
-  <section id="about">
+    <section id="about">
       <h2>Մեր մասին</h2>
       <p>Նպատակ ունենք զարգացնել Կապանի տուրիզմը՝ լուսաբանելով պատմական, մշակութային ու բնական գանձերը։</p>
     </section>
@@ -107,13 +50,26 @@
     <section id="contact">
       <h2>Կապ մեզ հետ</h2>
       <p>Հետադարձ կապ՝ epremyanlavo1@</p>
-      <p> +374 94 12 79 34</p>
-
+      <p>+374 94 12 79 34</p>
     </section>
+
+    <section id="comments">
+      <h2>Մեկնաբանություններ</h2>
+      <form id="commentForm">
+        <input type="text" id="username" placeholder="Ձեր անունը" required>
+        <textarea id="usercomment" placeholder="Ձեր մեկնաբանությունը" required></textarea>
+        <button type="submit">Ուղարկել</button>
+      </form>
+      <div id="commentList"></div>
+    </section>
+  </main>
+
   <footer>
     <p>2025 Կապան ՀԱՊՀ</p>
   </footer>
 
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
+  <script src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
   <script src="main.js"></script>
 </body>
 </html>
