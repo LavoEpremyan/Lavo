@@ -4,28 +4,32 @@ const attractions = [
     image: "images/baghaberd_amroc.jpg",
     description: "Բաղաբերդը 4-րդ դարի ամրոց է Կապան և Քաջարան քաղաքների միջև։",
     coords: [39.1953, 46.4119],
-    category: "Պատմական"
+    category: "Պատմական",
+    link: "https://hy.wikipedia.org/wiki/Բաղաբերդ"
   },
   {
     name: "Խուստուփ լեռ",
     image: "images/khustup-ler.jpg",
     description: "Խուստուփ լեռն՝ 3201 մ բարձրությամբ։",
     coords: [39.1067, 46.3956],
-    category: "Բնապահպանական"
+    category: "Բնապահպանական",
+    link: "https://hy.wikipedia.org/wiki/Խուստուփ"
   },
   {
     name: "Վահանավանք",
     image: "images/vahanavanq.jpg",
     description: "Վահանավանքը՝ 10-11-րդ դարերի վանական համալիր։",
     coords: [39.1903, 46.4040],
-    category: "Պատմական"
+    category: "Պատմական",
+    link: "https://hy.wikipedia.org/wiki/Վահանավանք"
   },
   {
     name: "Զիփլայն Կապանում",
     image: "images/zipline.png",
     description: "Զիփլայն թռիչք քաղաքի վրայով՝ էքստրեմալ փորձառություն։",
     coords: [39.208, 46.405],
-    category: "Արշավային"
+    category: "Արշավային",
+    link: "https://www.ziplinearmenia.com/"
   }
 ];
 
@@ -35,13 +39,16 @@ const filterSelect = document.getElementById("categoryFilter");
 
 function displayAttractions(data) {
   container.innerHTML = "";
-  data.forEach(({ name, image, description }) => {
+  data.forEach(({ name, image, description, link }) => {
     const card = document.createElement("div");
     card.className = "attraction-card";
-    card.innerHTML = 
-      <img src="${image}" alt="${name}" />
-      <h3>${name}</h3>
-      <p>${description}</p>;
+    card.innerHTML = `
+      <a href="${link}" target="_blank" style="text-decoration: none; color: inherit;">
+        <img src="${image}" alt="${name}" />
+        <h3>${name}</h3>
+        <p>${description}</p>
+      </a>
+    `;
     container.appendChild(card);
   });
 }
@@ -67,11 +74,11 @@ L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
   attribution: "&copy; OpenStreetMap contributors"
 }).addTo(map);
 
-attractions.forEach(({ name, description, coords }) => {
+attractions.forEach(({ name, description, coords, link }) => {
   if (coords) {
     L.marker(coords)
       .addTo(map)
-      .bindPopup(<strong>${name}</strong><br>${description});
+      .bindPopup(`<strong>${name}</strong><br>${description}<br><a href="${link}" target="_blank">Իմանալ ավելին</a>`);
   }
 });
 
@@ -102,7 +109,7 @@ form.addEventListener("submit", (e) => {
 function renderComments() {
   const comments = JSON.parse(localStorage.getItem("comments") || "[]");
   list.innerHTML = comments.map(c =>
-    <div><strong>${c.name}</strong> <em>${c.date}</em><br>${c.comment}</div>
+    `<div><strong>${c.name}</strong> <em>${c.date}</em><br>${c.comment}</div>`
   ).join("");
 }
 renderComments();
