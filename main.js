@@ -1,218 +1,229 @@
-body {
-  font-family: 'Segoe UI', sans-serif;
-  margin: 0;
-  padding: 0;
-  background-color: #f4f4f4;
-  color: #333;
-  transition: background 0.3s, color 0.3s;
+// Տեսարժան վայրեր
+const attractions = [
+  {
+    name: "Բաղաբերդի ամրոց",
+    image: "images/baghaberd_amroc.jpg",
+    description: "Բաղաբերդը 4-րդ դարի ամրոց է Կապան և Քաջարան քաղաքների միջև։",
+    coords: [39.1953, 46.4119],
+    category: "Պատմական"
+  },
+  {
+    name: "Խուստուփ լեռ",
+    image: "images/khustup-ler.jpg",
+    description: "Խուստուփ լեռն՝ 3201 մ բարձրությամբ։",
+    coords: [39.1067, 46.3956],
+    category: "Բնապահպանական"
+  },
+  {
+    name: "Վահանավանք",
+    image: "images/vahanavanq.jpg",
+    description: "Վահանավանքը՝ 10-11-րդ դարերի վանական համալիր։",
+    coords: [39.1903, 46.4040],
+    category: "Պատմական"
+  },
+  {
+    name: "Զիփլայն Կապանում",
+    image: "images/zipline.png",
+    description: "Զիփլայն թռիչք քաղաքի վրայով՝ էքստրեմալ փորձառություն։",
+    coords: [39.208, 46.405],
+    category: "Արշավային"
+  }
+];
+
+// Ֆիլտրեր
+const container = document.getElementById("attractions-container");
+const searchInput = document.getElementById("searchInput");
+const filterSelect = document.getElementById("categoryFilter");
+
+function displayAttractions(data) {
+  container.innerHTML = "";
+  data.forEach(({ name, image, description }) => {
+    const card = document.createElement("div");
+    card.className = "attraction-card";
+    card.innerHTML = `
+      <img src="${image}" alt="${name}">
+      <h3>${name}</h3>
+      <p>${description}</p>
+      <div class="rating">
+        <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
+      </div>
+    `;
+    const stars = card.querySelectorAll(".rating span");
+    stars.forEach((star, i) => {
+      star.addEventListener("click", () => {
+        stars.forEach((s, index) => s.classList.toggle("selected", index <= i));
+      });
+    });
+    container.appendChild(card);
+  });
 }
 
-header {
-  background: #004d40;
-  color: #fff;
-  padding: 1rem 2rem;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  flex-wrap: wrap;
+function applyFilters() {
+  const term = searchInput.value.toLowerCase();
+  const category = filterSelect.value;
+  const filtered = attractions.filter(
+    (a) =>
+      a.name.toLowerCase().includes(term) &&
+      (category === "Բոլորը" || a.category === category)
+  );
+  displayAttractions(filtered);
 }
 
-.logo {
-  font-size: 1.5rem;
-  font-weight: bold;
+searchInput.addEventListener("input", applyFilters);
+filterSelect.addEventListener("change", applyFilters);
+displayAttractions(attractions);
+
+// Քարտեզ
+const map = L.map("map").setView([39.205, 46.405], 12);
+L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+  attribution: "&copy; OpenStreetMap contributors"
+}).addTo(map);
+
+attractions.forEach(({ name, description, coords }) => {
+  if (coords) {
+    L.marker(coords)
+      .addTo(map)
+      .bindPopup(`<strong>${name}</strong><br>${description}`);
+  }
+});
+
+// Ամենամոտ վայրը
+document.getElementById("findNearest").addEventListener("click", () => {
+  if (!navigator.geolocation) {
+    alert("Ձեր բրաուզերը չի աջակցում տեղաբաշխմանը։");
+    return;
+  }
+
+  navigator.geolocation.getCurrentPosition((position) => {
+    const userLat = position.coords.latitude;
+    const userLng = position.coords.longitude;
+
+    let nearest = null;
+    let minDistance = Infinity;
+
+    attractions.forEach((a) => {
+      const dist = Math.sqrt(
+        Math.pow(userLat - a.coords[0], 2) + Math.pow(userLng - a.coords[1], 2)
+      );
+      if (dist < minDistance) {
+        minDistance = dist;
+        nearest = a;
+      }
+    });
+
+    if (nearest) {
+      document.getElementById("routeResult").innerText = `Ամենամոտ վայրն է՝ ${nearest.name}`;
+      map.setView(nearest.coords, 14);
+    }
+  });
+});
+
+// Մութ ռեժիմ
+document.getElementById("toggleDark").addEventListener("click", () => {
+  document.body.classList.toggle("dark");
+});
+
+// Նկարների վերբեռնում
+document.getElementById("imageUpload").addEventListener("change", function () {
+  const gallery = document.getElementById("gallery");
+  Array.from(this.files).forEach((file) => {
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const img = document.createElement("img");
+      img.src = e.target.result;
+      gallery.appendChild(img);
+    };
+    reader.readAsDataURL(file);
+  });
+});
+
+// Մեկնաբանություններ
+const form = document.getElementById("commentForm");
+const list = document.getElementById("commentList");
+
+form.addEventListener("submit", (e) => {
+  e.preventDefault();
+  const name = document.getElementById("username").value;
+  const comment = document.getElementById("usercomment").value;
+  const entry = { name, comment, date: new Date().toLocaleString(), replies: [] };
+  const comments = JSON.parse(localStorage.getItem("comments") || "[]");
+  comments.push(entry);
+  localStorage.setItem("comments", JSON.stringify(comments));
+  form.reset();
+  renderComments();
+});
+
+function renderComments() {
+  const comments = JSON.parse(localStorage.getItem("comments") || "[]");
+  list.innerHTML = comments.map((c, i) => `
+    <div>
+      <strong>${c.name}</strong> <em>${c.date}</em><br>${c.comment}
+      <div class="reply-btn" onclick="replyTo(${i})">Պատասխանել</div>
+      ${c.replies.map(r => `<div style="margin-left:1rem;"><em>${r}</em></div>`).join("")}
+    </div>
+  `).join("");
 }
 
-nav ul {
-  list-style: none;
-  display: flex;
-  gap: 1rem;
-  padding: 0;
+window.replyTo = function(index) {
+  const reply = prompt("Գրեք ձեր պատասխանը");
+  if (reply) {
+    const comments = JSON.parse(localStorage.getItem("comments") || "[]");
+    comments[index].replies.push(reply);
+    localStorage.setItem("comments", JSON.stringify(comments));
+    renderComments();
+  }
+};
+
+renderComments();
+
+// Google Translate
+function googleTranslateElementInit() {
+  new google.translate.TranslateElement({
+    pageLanguage: 'hy',
+    includedLanguages: 'en,ru,fr,de,hy',
+    layout: google.translate.TranslateElement.InlineLayout.SIMPLE
+  }, 'google_translate_element');
 }
 
-nav ul li a {
-  color: white;
-  text-decoration: none;
-}
+// Քվեարկություն
+const pollForm = document.getElementById("pollForm");
+const pollChart = document.getElementById("pollChart").getContext("2d");
+let pollData = JSON.parse(localStorage.getItem("poll") || "{}");
 
-#toggleDark {
-  background: none;
-  border: none;
-  color: white;
-  font-size: 1.2rem;
-  cursor: pointer;
-}
+pollForm.addEventListener("submit", (e) => {
+  e.preventDefault();
+  const selected = pollForm.poll.value;
+  if (selected) {
+    pollData[selected] = (pollData[selected] || 0) + 1;
+    localStorage.setItem("poll", JSON.stringify(pollData));
+    renderPollChart();
+  }
+});
 
-main {
-  padding: 2rem;
+function renderPollChart() {
+  const data = {
+    labels: Object.keys(pollData),
+    datasets: [{
+      label: "Ձայներ",
+      data: Object.values(pollData),
+      backgroundColor: ["#66bb6a", "#29b6f6", "#ffa726"]
+    }]
+  };
+  new Chart(pollChart, {
+    type: "bar",
+    data: data,
+    options: {
+      responsive: true,
+      scales: {
+        y: { beginAtZero: true }
+      }
+    }
+  });
 }
+renderPollChart();
 
-/* Attractions Section */
-.attractions-container {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 1.5rem;
-  justify-content: center;
-}
-
-.attraction-card {
-  background: white;
-  border-radius: 10px;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-  width: 300px;
-  overflow: hidden;
-  transition: 0.3s;
-  position: relative;
-}
-
-.attraction-card:hover {
-  transform: scale(1.02);
-}
-
-.attraction-card img {
-  width: 100%;
-  height: 200px;
-  object-fit: cover;
-}
-
-.attraction-card h3 {
-  margin: 0.5rem;
-  color: #004d40;
-}
-
-.attraction-card p {
-  padding: 0 0.5rem 1rem;
-}
-
-/* Rating */
-.rating {
-  display: flex;
-  justify-content: center;
-  margin-bottom: 10px;
-}
-
-.rating span {
-  font-size: 24px;
-  cursor: pointer;
-}
-
-.rating span:hover,
-.rating span.selected {
-  color: gold;
-}
-
-/* Search and Filter */
-#searchInput,
-#categoryFilter {
-  display: block;
-  margin: 1rem auto;
-  padding: 0.5rem;
-  font-size: 1rem;
-  border: 1px solid #ccc;
-  border-radius: 6px;
-  max-width: 400px;
-  width: 100%;
-}
-
-/* Map */
-#map {
-  height: 400px;
-  width: 100%;
-  border-radius: 10px;
-  margin-top: 2rem;
-}
-
-/* Gallery */
-.gallery {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 1rem;
-  justify-content: center;
-}
-
-.gallery img {
-  width: 200px;
-  border-radius: 10px;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-  object-fit: cover;
-}
-
-/* Comments Section */
-#comments {
-  margin-top: 3rem;
-  background: #fff;
-  padding: 2rem;
-  border-radius: 10px;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-}
-
-#comments h2 {
-  color: #004d40;
-}
-
-#commentForm {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-  margin-bottom: 2rem;
-}
-
-#commentForm input,
-#commentForm textarea {
-  padding: 0.5rem;
-  border-radius: 6px;
-  border: 1px solid #ccc;
-  font-size: 1rem;
-}
-
-#commentForm button {
-  background-color: #004d40;
-  color: white;
-  border: none;
-  padding: 0.5rem 1rem;
-  border-radius: 6px;
-  cursor: pointer;
-}
-
-#commentList div {
-  margin-bottom: 1rem;
-  border-bottom: 1px solid #eee;
-  padding-bottom: 1rem;
-}
-
-.reply-btn {
-  color: #00695c;
-  cursor: pointer;
-  font-size: 0.9rem;
-}
-
-/* DARK MODE */
-body.dark {
-  background-color: #121212;
-  color: #f0f0f0;
-}
-
-body.dark header,
-body.dark footer {
-  background-color: #1e1e1e;
-}
-
-body.dark .attraction-card {
-  background: #2c2c2c;
-  color: #fff;
-}
-
-body.dark .attraction-card:hover {
-  transform: scale(1.02);
-}
-
-body.dark input,
-body.dark textarea,
-body.dark select {
-  background-color: #333;
-  color: #fff;
-  border: 1px solid #555;
-}
-
-body.dark .reply-btn {
-  color: #80cbc4;
-}
+// AI Խորհուրդ
+document.getElementById("getSuggestion").addEventListener("click", () => {
+  const random = attractions[Math.floor(Math.random() * attractions.length)];
+  document.getElementById("suggestionResult").innerText = `Խորհուրդ ենք տալիս այցելել՝ ${random.name}`;
+});
